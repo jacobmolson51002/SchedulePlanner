@@ -221,6 +221,12 @@ fn main() {
 
                     staff_member.availability = person_availability;
 
+                    for day in schedule {
+                        for shift in day.shifts {
+                            
+                        }
+                    }
+
 
 
 
