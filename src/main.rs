@@ -221,11 +221,15 @@ fn main() {
 
                     staff_member.availability = person_availability;
 
-                    for day in schedule {
-                        for shift in day.shifts {
+                    let mut index: u8 = 0;
+
+                    for day in &schedule {
+                        for shift in &day.shifts {
                             
                         }
                     }
+
+                    
 
 
 
