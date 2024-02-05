@@ -1,5 +1,8 @@
 use std::io;
 use std::fs;
+use shuffle::shuffler::Shuffler;
+use shuffle::irs::Irs;
+use rand::rngs::mock::StepRng;
 
 // fn getNextLine(lines: Vec<String>, current_line: usize) => {
 
@@ -15,6 +18,7 @@ struct Shift {
     hours: f32
 }
 
+#[derive(Default, Clone)]
 struct Staff {
     name: String,
     hours: f32,
@@ -24,140 +28,6 @@ struct Staff {
     hour_cap: f32,
     availability: Vec<Vec<String>>,
 }
-
-/*const SCHEDULE_TEMPLATE: Vec<Day> = vec![
-    Day {
-        day: "monday".to_string(),
-        shifts: vec![
-            Shift {
-                shift: "morning".to_string(),
-                people: Vec::<String>::new(),
-                hours: 4.0
-            },
-            Shift {
-                shift: "afternoon".to_string(),
-                people: Vec::<String>::new(),
-                hours: 4.5
-            },
-            Shift {
-                shift: "evening".to_string(),
-                people: Vec::<String>::new(),
-                hours: 4.5
-            },
-        ]
-    },
-    Day {
-        day: "tuesday".to_string(),
-        shifts: vec![
-            Shift {
-                shift: "morning".to_string(),
-                people: Vec::<String>::new(),
-                hours: 4.0
-            },
-            Shift {
-                shift: "afternoon".to_string(),
-                people: Vec::<String>::new(),
-                hours: 4.5
-            },
-            Shift {
-                shift: "evening".to_string(),
-                people: Vec::<String>::new(),
-                hours: 4.5
-            },
-        ]
-    },
-    Day {
-        day: "wednesday".to_string(),
-        shifts: vec![
-            Shift {
-                shift: "morning".to_string(),
-                people: Vec::<String>::new(),
-                hours: 4.0
-            },
-            Shift {
-                shift: "afternoon".to_string(),
-                people: Vec::<String>::new(),
-                hours: 4.5
-            },
-            Shift {
-                shift: "evening".to_string(),
-                people: Vec::<String>::new(),
-                hours: 4.5
-            },
-        ]
-    },
-    Day {
-        day: "thursday".to_string(),
-        shifts: vec![
-            Shift {
-                shift: "morning".to_string(),
-                people: Vec::<String>::new(),
-                hours: 4.0
-            },
-            Shift {
-                shift: "afternoon".to_string(),
-                people: Vec::<String>::new(),
-                hours: 4.5
-            },
-            Shift {
-                shift: "evening".to_string(),
-                people: Vec::<String>::new(),
-                hours: 4.5
-            },
-        ]
-    },
-    Day {
-        day: "friday".to_string(),
-        shifts: vec![
-            Shift {
-                shift: "morning".to_string(),
-                people: Vec::<String>::new(),
-                hours: 4.0
-            },
-            Shift {
-                shift: "afternoon".to_string(),
-                people: Vec::<String>::new(),
-                hours: 4.5
-            },
-            Shift {
-                shift: "evening".to_string(),
-                people: Vec::<String>::new(),
-                hours: 4.5
-            },
-        ]
-    },
-    Day {
-        day: "saturday".to_string(),
-        shifts: vec![
-            Shift {
-                shift: "morning".to_string(),
-                people: Vec::<String>::new(),
-                hours: 6.5
-            },
-            Shift {
-                shift: "evening".to_string(),
-                people: Vec::<String>::new(),
-                hours: 6.5
-            }
-        ]
-    },
-    Day {
-        day: "sunday".to_string(),
-        shifts: vec![
-            Shift {
-                shift: "morning".to_string(),
-                people: Vec::<String>::new(),
-                hours: 5.5
-            },
-            Shift {
-                shift: "evening".to_string(),
-                people: Vec::<String>::new(),
-                hours: 6.5
-            }
-        ]
-    }
-];
-*/
 
 fn get_staff(data: String, schedule: &Vec<Day>) -> Vec<Staff> {
     let lines = data.split("#").collect::<Vec<_>>();
@@ -190,7 +60,7 @@ fn get_staff(data: String, schedule: &Vec<Day>) -> Vec<Staff> {
             hours: 0.0,
             boss: if person[1] == "n" { false } else { true },
             relationship: if person[2] == "n" { false } else { true },
-            significant_other: if person[2] == "n" { person[3].to_string() } else { "".to_string() },
+            significant_other: person[3].to_string(),
             hour_cap: if person[4] == "n" { 20.0 } else { person[5].to_string().trim().parse::<f32>().unwrap() },
             availability: Vec::<Vec<String>>::new()
         };
@@ -241,6 +111,17 @@ fn print_schedule(schedule: &Vec<Day>) {
             }
         }
     }
+}
+
+fn not_working(day: &Vec<Shift>, name: &str) -> bool {
+    let mut not_working: bool = true;
+    for shift in day {
+        if shift.people.contains(&name.to_string()) {
+            not_working = false;
+            break;
+        }
+    }
+    return not_working;
 }
 
 fn main() {
@@ -400,6 +281,9 @@ fn main() {
 
                 let mut staff_members = get_staff(data, &schedule);
 
+                let mut rng = StepRng::new(2, 13);
+                let mut irs = Irs::default();
+
                 //scheduling algorithm
 
                 for run in 0..2 {
@@ -408,7 +292,9 @@ fn main() {
                             for j in 0..schedule[i].shifts.len() {
                                 if schedule[i].day == "saturday".to_string() || schedule[i].day == "sunday".to_string() || schedule[i].shifts[j].shift != "morning".to_string() && run == 0 {
                                     for person in &mut staff_members {
-                                        if person.boss == true && person.availability[i][j] == 'a'.to_string() && person.hours <= person.hour_cap - 6.5 {
+                                        println!("{}", &person.name.clone());
+                                        println!("{}", &person.significant_other.clone());
+                                        if not_working(&schedule[i].shifts, &person.name) && person.boss == true && person.availability[i][j] == 'a'.to_string() && person.hours <= person.hour_cap - 6.5 && !schedule[i].shifts[j].people.contains(&person.name.clone()) && !schedule[i].shifts[j].people.contains(&person.significant_other.clone()) {
                                             schedule[i].shifts[j].people.push(person.name.clone());
                                             person.hours = person.hours + schedule[i].shifts[j].hours;
                                             break;
@@ -416,7 +302,7 @@ fn main() {
                                     }
                                     if schedule[i].shifts[j].people.len() == 0 {
                                         for person in &mut staff_members {
-                                            if person.boss == true && (person.availability[i][j] == 'a'.to_string() || person.availability[i][j] == 'm'.to_string()) && person.hours <= person.hour_cap - 6.5 {
+                                            if person.boss == true && (person.availability[i][j] == 'a'.to_string() || person.availability[i][j] == 'm'.to_string()) && person.hours <= person.hour_cap - 6.5 && !schedule[i].shifts[j].people.contains(&person.name.clone()) && !schedule[i].shifts[j].people.contains(&person.significant_other.clone()) {
                                                 schedule[i].shifts[j].people.push(person.name.clone());
                                                 person.hours = person.hours + schedule[i].shifts[j].hours;
                                                 break;
@@ -427,7 +313,7 @@ fn main() {
                                 if schedule[i].day != "saturday".to_string() && schedule[i].day != "sunday".to_string() && schedule[i].shifts[j].shift == "morning".to_string() && schedule[i].shifts[j].people.len() < 1 {
                                     let mut added: bool = false;
                                     for person in &mut staff_members {
-                                        if person.availability[i][j] == 'a'.to_string() && person.hours <= person.hour_cap - 6.5 && !schedule[i].shifts[j].people.contains(&person.name.clone()) && !schedule[i].shifts[j].people.contains(&person.significant_other.clone()) {
+                                        if not_working(&schedule[i].shifts, &person.name) && person.availability[i][j] == 'a'.to_string() && person.hours <= person.hour_cap - 6.5 && !schedule[i].shifts[j].people.contains(&person.name.clone()) && !schedule[i].shifts[j].people.contains(&person.significant_other.clone()) {
                                             schedule[i].shifts[j].people.push(person.name.clone());
                                             person.hours = person.hours + schedule[i].shifts[j].hours;
                                             added = true;
@@ -447,7 +333,7 @@ fn main() {
                                 if schedule[i].day == "saturday".to_string() || schedule[i].day == "sunday".to_string() || schedule[i].shifts[j].shift != "morning".to_string(){
                                     let mut threshold = 3 + run;
                                     for person in &mut staff_members {
-                                        if person.availability[i][j] == 'a'.to_string() && person.hours <= person.hour_cap - 6.5 && !schedule[i].shifts[j].people.contains(&person.name.clone()) && !schedule[i].shifts[j].people.contains(&person.significant_other.clone()){
+                                        if not_working(&schedule[i].shifts, &person.name) && person.availability[i][j] == 'a'.to_string() && person.hours <= person.hour_cap - 6.5 && !schedule[i].shifts[j].people.contains(&person.name.clone()) && !schedule[i].shifts[j].people.contains(&person.significant_other.clone()){
                                             schedule[i].shifts[j].people.push(person.name.clone());
                                             person.hours = person.hours + schedule[i].shifts[j].hours;
                                             if schedule[i].shifts[j].people.len() >= threshold {
@@ -468,6 +354,7 @@ fn main() {
                                     }
                                 }
                             }
+                            irs.shuffle(&mut staff_members, &mut rng);
                         }
                     }else{
                         for i in (0..schedule.len()).rev() {
@@ -475,7 +362,7 @@ fn main() {
                                 if schedule[i].day == "saturday".to_string() || schedule[i].day == "sunday".to_string() || schedule[i].shifts[j].shift != "morning".to_string(){
                                     let mut threshold = 3 + run;
                                     for person in &mut staff_members {
-                                        if person.availability[i][j] == 'a'.to_string() && person.hours <= person.hour_cap - 6.5 && !schedule[i].shifts[j].people.contains(&person.name.clone()) && !schedule[i].shifts[j].people.contains(&person.significant_other.clone()){
+                                        if not_working(&schedule[i].shifts, &person.name) && person.availability[i][j] == 'a'.to_string() && person.hours <= person.hour_cap - 6.5 && !schedule[i].shifts[j].people.contains(&person.name.clone()) && !schedule[i].shifts[j].people.contains(&person.significant_other.clone()){
                                             schedule[i].shifts[j].people.push(person.name.clone());
                                             person.hours = person.hours + schedule[i].shifts[j].hours;
                                             if schedule[i].shifts[j].people.len() >= threshold {
