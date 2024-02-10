@@ -7,11 +7,13 @@ use rand::rngs::mock::StepRng;
 // fn getNextLine(lines: Vec<String>, current_line: usize) => {
 
 // }
-
+#[derive(Default, Clone)]
 struct Day {
     day: String,
     shifts: Vec<Shift>
 }
+
+#[derive(Default, Clone)]
 struct Shift {
     shift: String,
     people: Vec<String>,
@@ -35,13 +37,21 @@ fn get_staff(data: String, schedule: &Vec<Day>) -> Vec<Staff> {
     let mut staff_members = Vec::<Vec<String>>::new();
     let mut staff_vec = Vec::<Staff>::new();
 
-    for line in &lines {
+    for line in 0..lines.len() {
         
-        let mut person = line.split("\n").collect::<Vec<_>>();
+        let mut person = lines[line].split("\n").collect::<Vec<_>>();
         let mut placeholder = Vec::<String>::new();
-        for mut x in &person {
-            let mut new_x = x.to_string();
-            let nex_x = new_x.pop();
+        for i in 0..person.len() {
+            let mut new_x = person[i].to_string();
+            println!("{}", new_x);
+            if line != (lines.len()-1) {
+                let nex_x = new_x.pop();
+            }else {
+                if i != (person.len()-1) {
+                    let nex_x = new_x.pop();
+                }
+            }
+            
             placeholder.push(new_x);
         }
         placeholder.pop().expect("Could not get last element");
@@ -67,7 +77,7 @@ fn get_staff(data: String, schedule: &Vec<Day>) -> Vec<Staff> {
 
         let mut person_availability = Vec::<Vec<String>>::new();
 
-        let mut index: usize = 5;
+        let mut index: usize = 6;
 
         for day in schedule {
             let mut day_availability = Vec::<String>::new();
@@ -77,6 +87,9 @@ fn get_staff(data: String, schedule: &Vec<Day>) -> Vec<Staff> {
             }
             person_availability.push(day_availability);
         }
+
+        println!("availability: ");
+        println!("{:?}", person_availability);
 
         staff_member.availability = person_availability;
         staff_vec.push(staff_member);
@@ -124,7 +137,175 @@ fn not_working(day: &Vec<Shift>, name: &str) -> bool {
     return not_working;
 }
 
+fn print_staff(staff: &Vec<Staff>) {
+    for person in staff {
+        println!("--{}--", person.name);
+        println!("boss: {}", person.boss);
+        println!("hour cap: {}", person.hour_cap);
+        if person.relationship {
+            println!("significant other: {}", person.significant_other);
+        }
+        println!("availability: |    Monday     |    Tuesday    |   Wednesday   |   Thursday    |    Friday     |   Saturday    |    Sunday     |");
+        for i in 0..3 {
+            if i == 0 {
+                print!("morning:     ");
+            }
+            if i == 1 {
+                print!("afternoon:   ");
+            }
+            if i == 2 {
+                print!("evening:     ");
+            }
+            for day in 0..person.availability.len() {
+                if person.availability[day].len() >= (i + 1) {
+                    if day == person.availability.len() - 1 {
+                        println!("        {}       ", person.availability[day][i]);
+                    }else {
+                        print!("        {}       ", person.availability[day][i]);
+                    }
+                    
+                }
+            }
+        }
+        println!("");
+        println!("");
+    }
+}
+
 fn main() {
+    let mut schedule_template = vec![
+        Day {
+            day: "monday".to_string(),
+            shifts: vec![
+                Shift {
+                    shift: "morning".to_string(),
+                    people: Vec::<String>::new(),
+                    hours: 4.0
+                },
+                Shift {
+                    shift: "afternoon".to_string(),
+                    people: Vec::<String>::new(),
+                    hours: 4.5
+                },
+                Shift {
+                    shift: "evening".to_string(),
+                    people: Vec::<String>::new(),
+                    hours: 4.5
+                },
+            ]
+        },
+        Day {
+            day: "tuesday".to_string(),
+            shifts: vec![
+                Shift {
+                    shift: "morning".to_string(),
+                    people: Vec::<String>::new(),
+                    hours: 4.0
+                },
+                Shift {
+                    shift: "afternoon".to_string(),
+                    people: Vec::<String>::new(),
+                    hours: 4.5
+                },
+                Shift {
+                    shift: "evening".to_string(),
+                    people: Vec::<String>::new(),
+                    hours: 4.5
+                },
+            ]
+        },
+        Day {
+            day: "wednesday".to_string(),
+            shifts: vec![
+                Shift {
+                    shift: "morning".to_string(),
+                    people: Vec::<String>::new(),
+                    hours: 4.0
+                },
+                Shift {
+                    shift: "afternoon".to_string(),
+                    people: Vec::<String>::new(),
+                    hours: 4.5
+                },
+                Shift {
+                    shift: "evening".to_string(),
+                    people: Vec::<String>::new(),
+                    hours: 4.5
+                },
+            ]
+        },
+        Day {
+            day: "thursday".to_string(),
+            shifts: vec![
+                Shift {
+                    shift: "morning".to_string(),
+                    people: Vec::<String>::new(),
+                    hours: 4.0
+                },
+                Shift {
+                    shift: "afternoon".to_string(),
+                    people: Vec::<String>::new(),
+                    hours: 4.5
+                },
+                Shift {
+                    shift: "evening".to_string(),
+                    people: Vec::<String>::new(),
+                    hours: 4.5
+                },
+            ]
+        },
+        Day {
+            day: "friday".to_string(),
+            shifts: vec![
+                Shift {
+                    shift: "morning".to_string(),
+                    people: Vec::<String>::new(),
+                    hours: 4.0
+                },
+                Shift {
+                    shift: "afternoon".to_string(),
+                    people: Vec::<String>::new(),
+                    hours: 4.5
+                },
+                Shift {
+                    shift: "evening".to_string(),
+                    people: Vec::<String>::new(),
+                    hours: 4.5
+                },
+            ]
+        },
+        Day {
+            day: "saturday".to_string(),
+            shifts: vec![
+                Shift {
+                    shift: "morning".to_string(),
+                    people: Vec::<String>::new(),
+                    hours: 6.5
+                },
+                Shift {
+                    shift: "evening".to_string(),
+                    people: Vec::<String>::new(),
+                    hours: 6.5
+                }
+            ]
+        },
+        Day {
+            day: "sunday".to_string(),
+            shifts: vec![
+                Shift {
+                    shift: "morning".to_string(),
+                    people: Vec::<String>::new(),
+                    hours: 5.5
+                },
+                Shift {
+                    shift: "evening".to_string(),
+                    people: Vec::<String>::new(),
+                    hours: 6.5
+                }
+            ]
+        }
+    ];
+
     loop {
         let mut choice: String = String::new();
 
@@ -139,145 +320,12 @@ fn main() {
         if choice.trim() == "1" {
             'generate: loop {
                 print!("\x1B[2J");
-
-                let mut staff = Vec::<Staff>::new();
         
                 //read data from file
                 let data = fs::read_to_string("staff.txt").expect("unable to read file");
                 //split data into a Vector of each line
 
-                let mut schedule = vec![
-                    Day {
-                        day: "monday".to_string(),
-                        shifts: vec![
-                            Shift {
-                                shift: "morning".to_string(),
-                                people: Vec::<String>::new(),
-                                hours: 4.0
-                            },
-                            Shift {
-                                shift: "afternoon".to_string(),
-                                people: Vec::<String>::new(),
-                                hours: 4.5
-                            },
-                            Shift {
-                                shift: "evening".to_string(),
-                                people: Vec::<String>::new(),
-                                hours: 4.5
-                            },
-                        ]
-                    },
-                    Day {
-                        day: "tuesday".to_string(),
-                        shifts: vec![
-                            Shift {
-                                shift: "morning".to_string(),
-                                people: Vec::<String>::new(),
-                                hours: 4.0
-                            },
-                            Shift {
-                                shift: "afternoon".to_string(),
-                                people: Vec::<String>::new(),
-                                hours: 4.5
-                            },
-                            Shift {
-                                shift: "evening".to_string(),
-                                people: Vec::<String>::new(),
-                                hours: 4.5
-                            },
-                        ]
-                    },
-                    Day {
-                        day: "wednesday".to_string(),
-                        shifts: vec![
-                            Shift {
-                                shift: "morning".to_string(),
-                                people: Vec::<String>::new(),
-                                hours: 4.0
-                            },
-                            Shift {
-                                shift: "afternoon".to_string(),
-                                people: Vec::<String>::new(),
-                                hours: 4.5
-                            },
-                            Shift {
-                                shift: "evening".to_string(),
-                                people: Vec::<String>::new(),
-                                hours: 4.5
-                            },
-                        ]
-                    },
-                    Day {
-                        day: "thursday".to_string(),
-                        shifts: vec![
-                            Shift {
-                                shift: "morning".to_string(),
-                                people: Vec::<String>::new(),
-                                hours: 4.0
-                            },
-                            Shift {
-                                shift: "afternoon".to_string(),
-                                people: Vec::<String>::new(),
-                                hours: 4.5
-                            },
-                            Shift {
-                                shift: "evening".to_string(),
-                                people: Vec::<String>::new(),
-                                hours: 4.5
-                            },
-                        ]
-                    },
-                    Day {
-                        day: "friday".to_string(),
-                        shifts: vec![
-                            Shift {
-                                shift: "morning".to_string(),
-                                people: Vec::<String>::new(),
-                                hours: 4.0
-                            },
-                            Shift {
-                                shift: "afternoon".to_string(),
-                                people: Vec::<String>::new(),
-                                hours: 4.5
-                            },
-                            Shift {
-                                shift: "evening".to_string(),
-                                people: Vec::<String>::new(),
-                                hours: 4.5
-                            },
-                        ]
-                    },
-                    Day {
-                        day: "saturday".to_string(),
-                        shifts: vec![
-                            Shift {
-                                shift: "morning".to_string(),
-                                people: Vec::<String>::new(),
-                                hours: 6.5
-                            },
-                            Shift {
-                                shift: "evening".to_string(),
-                                people: Vec::<String>::new(),
-                                hours: 6.5
-                            }
-                        ]
-                    },
-                    Day {
-                        day: "sunday".to_string(),
-                        shifts: vec![
-                            Shift {
-                                shift: "morning".to_string(),
-                                people: Vec::<String>::new(),
-                                hours: 5.5
-                            },
-                            Shift {
-                                shift: "evening".to_string(),
-                                people: Vec::<String>::new(),
-                                hours: 6.5
-                            }
-                        ]
-                    }
-                ];
+                let mut schedule = schedule_template.clone();
 
                 let mut staff_members = get_staff(data, &schedule);
 
@@ -389,6 +437,16 @@ fn main() {
 
 
                 print_schedule(&schedule);
+                println!("");
+                println!("----------------------staff hours------------------------");
+                let mut average = 0.0;
+
+                for person in &staff_members {
+                    println!("{}: {}", person.name, person.hours);
+                    average = average + person.hours;
+                }
+                println!("");
+                println!("Average staff hours: {}", (average / staff_members.len() as f32 ));
 
                 let mut choice = String::new();
 
@@ -418,29 +476,14 @@ fn main() {
         }else if choice.trim() == "2" {
             let mut staff_choice: String = String::new();
 
-            let mut staff_raw = fs::read_to_string("staff.txt").expect("Unable to read file");
-            let mut staff_raw = staff_raw.split("#").collect::<Vec<&str>>();
-            
-            let mut staff = Vec::<Staff>::new();
+            let data = fs::read_to_string("staff.txt").expect("unable to read file");
 
-            for person in &staff_raw {
-                let mut person = person.split("\n").collect::<Vec<&str>>();
-                let mut staff_member = Staff { 
-                    name: person[0].to_string(),
-                    hours: 0.0,
-                    boss: if person[1] == "y" {true} else {false},
-                    relationship: if person[2] == "y" {true} else {false},
-                    significant_other: person[3].to_string(),
-                    hour_cap: person[4].parse::<f32>().unwrap(),
-                    availability: {
-                        Vec::<Vec<String>>::new()
-                    },
-                 };
-            }
+            let mut staff_members = get_staff(data, &schedule_template);
 
             loop {
                 print!("\x1B[2J");
-                println!("{}", staff_raw.len().to_string());
+                print_staff(&staff_members);
+                println!("");
                 println!("Please choose an option:");
                 println!("1. search staff");
                 println!("2. back");
