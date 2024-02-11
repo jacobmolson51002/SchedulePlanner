@@ -38,17 +38,20 @@ fn get_staff(data: String, schedule: &Vec<Day>) -> Vec<Staff> {
     let mut staff_vec = Vec::<Staff>::new();
 
     for line in 0..lines.len() {
-        
         let mut person = lines[line].split("\n").collect::<Vec<_>>();
+        if line == (lines.len()-1) {
+            person.push("");
+        }
         let mut placeholder = Vec::<String>::new();
+        println!("{:?}", person);
         for i in 0..person.len() {
             let mut new_x = person[i].to_string();
             println!("{}", new_x);
             if line != (lines.len()-1) {
-                let nex_x = new_x.pop();
+                new_x.pop();
             }else {
                 if i != (person.len()-1) {
-                    let nex_x = new_x.pop();
+                    new_x.pop();
                 }
             }
             
@@ -485,33 +488,60 @@ fn main() {
                 print_staff(&staff_members);
                 println!("");
                 println!("Please choose an option:");
-                println!("1. search staff");
-                println!("2. back");
+                println!("1. edit staff member");
+                println!("2. add new staff member");
+                println!("3. back");
     
                 io::stdin().read_line(&mut staff_choice).expect("unable to read line");
 
-                if staff_choice.trim() == "2" {
+                if staff_choice.trim() == "3" {
                     break;
                 } else if staff_choice.trim() == "1" {
-                    println!("going to search for user");
+                    println!("working");
+
+                    println!("\x1B[2J");
+
+                    let mut staff_member: String = String::new();
+
+                    println!("Search by name (case sensitive): ");
+
+                    io::stdin().read_line(&mut staff_member).expect("could not read line");
+
+                    let mut index: i8 = -1;
+
+                    for staff in 0..staff_members.len() {
+                        if staff_members[staff].name == staff_member.trim() {
+                            index = staff as i8;
+                            break;
+                        }
+                    }
+
+
+                    if index == -1 {
+                       println!("Could not find staff member."); 
+                       //thread::sleep(Duration::from_millis(500));
+                       continue;
+                    }else {
+                        print_staff(&vec![staff_members[index as usize].clone()]);
+
+                        let mut staff_options: String = String::new();
+
+                        println!("Editing options:");
+                        println!("1. Change name");
+
+                        io::stdin().read_line(&mut staff_options).expect("could not read line");
+                    }
+
+
+
+
+
+                } else if staff_choice.trim() == "2"{
+                    println!("Adding new staff member");
                 } else {
-                    println!("Please choose a valid option.");
+                    println!("Please choose a valid option");
                 }
             }
-
-
-
-
-            /*
-                staff_raw = readfile(staff.txt)
-                split file into vector of staff members (split by #)
-                staff = []
-                staffmember = {}
-                staffmember
-
-
-
-            */
             
         } else if choice.trim() == "3" {
             break;
