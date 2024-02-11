@@ -3,7 +3,7 @@ n
 n
 NOBDOY
 n
-20
+20.0
 n
 a
 a
@@ -29,7 +29,7 @@ y
 y
 Daniel
 n
-20
+20.0
 n
 a
 n
@@ -53,9 +53,9 @@ a
 Jackson
 n
 n
-NOBODY
+NOBDOY
 y
-15
+15.0
 a
 a
 a
@@ -81,7 +81,7 @@ y
 y
 Piper
 n
-20
+20.0
 n
 a
 a
@@ -107,7 +107,7 @@ n
 n
 NOBDOY
 y
-10
+10.0
 a
 n
 a
@@ -133,7 +133,7 @@ n
 y
 Haili
 n
-20
+20.0
 a
 a
 n
@@ -159,7 +159,7 @@ n
 n
 NOBDOY
 n
-20
+20.0
 n
 n
 n
@@ -185,7 +185,7 @@ n
 n
 NOBDOY
 n
-20
+20.0
 a
 n
 n
@@ -211,7 +211,7 @@ n
 n
 NOBDOY
 n
-20
+20.0
 n
 n
 a
@@ -237,7 +237,7 @@ n
 n
 NOBDOY
 n
-20
+20.0
 n
 n
 n
@@ -263,7 +263,7 @@ y
 n
 NOBDOY
 n
-20
+20.0
 a
 a
 a
@@ -289,7 +289,7 @@ y
 n
 NOBDOY
 n
-20
+20.0
 n
 n
 n
@@ -315,7 +315,7 @@ n
 y
 Breeze
 n
-20
+20.0
 n
 n
 n
@@ -341,7 +341,7 @@ n
 n
 NOBDOY
 n
-20
+20.0
 a
 n
 a
@@ -367,7 +367,7 @@ n
 n
 NOBDOY
 n
-20
+20.0
 m
 n
 n
@@ -393,7 +393,7 @@ y
 y
 Chloe
 n
-20
+20.0
 n
 n
 a
@@ -419,7 +419,7 @@ n
 n
 NOBDOY
 n
-20
+20.0
 n
 n
 a
@@ -445,7 +445,7 @@ n
 n
 NOBDOY
 y
-10
+10.0
 n
 n
 n
@@ -471,7 +471,7 @@ y
 y
 Olson
 n
-20
+20.0
 n
 a
 n
@@ -497,7 +497,7 @@ y
 n
 NOBDOY
 n
-20
+20.0
 n
 n
 n
@@ -516,4 +516,4 @@ a
 a
 m
 a
-
+m

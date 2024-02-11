@@ -175,6 +175,43 @@ fn print_staff(staff: &Vec<Staff>) {
     }
 }
 
+fn save_to_file(staff_members: &Vec<Staff>) {
+    let mut new_file: String = "".to_owned();
+    for staff in 0..staff_members.len() {
+        new_file.push_str(&staff_members[staff].name);
+        new_file.push_str("\r\n");
+        if staff_members[staff].boss {
+            new_file.push_str("y\r\n");
+        }else{
+            new_file.push_str("n\r\n");
+        }
+        if staff_members[staff].relationship {
+            new_file.push_str("y\r\n");
+        }else{
+            new_file.push_str("n\r\n");
+        }
+        new_file.push_str(&staff_members[staff].significant_other);
+        new_file.push_str("\r\n");
+        if staff_members[staff].hour_cap < 20.0{
+            new_file.push_str("y\r\n");
+        }else{
+            new_file.push_str("n\r\n");
+        }
+        new_file.push_str(&staff_members[staff].hour_cap.to_string());
+        new_file.push_str("\r\n");
+        for day in &staff_members[staff].availability {
+            for shift in day {
+                new_file.push_str(&shift.to_string());
+                new_file.push_str("\r\n");
+            }
+        }
+        if staff != (staff_members.len()-1) {
+            new_file.push_str("#\r\n");
+        }
+    }
+    fs::write("./staff.txt", new_file).expect("couldn't write to file");
+}
+
 fn main() {
     let mut schedule_template = vec![
         Day {
@@ -522,19 +559,87 @@ fn main() {
                        //thread::sleep(Duration::from_millis(500));
                        continue;
                     }else {
-                        print_staff(&vec![staff_members[index as usize].clone()]);
+                        loop {
+                            println!("\x1B[2J");
+                            print_staff(&vec![staff_members[index as usize].clone()]);
+    
+                            let mut staff_options: String = String::new();
+    
+                            println!("Editing options:");
+                            println!("1. Change name");
+                            println!("2. Change BOS status");
+                            println!("3. Change hour cap");
+                            println!("4. Change significant other");
+                            println!("5. Change availability");
+                            println!("6. back");
+    
+                            io::stdin().read_line(&mut staff_options).expect("could not read line");
+    
+                            if staff_options.trim() == "1" {
+                                let mut new_value: String = String::new();
+                                println!("Enter new name: ");
+                                io::stdin().read_line(&mut new_value).expect("could not read line");
+    
+                                staff_members[index as usize].name = new_value.trim().to_string();
+                                save_to_file(&staff_members);
+                                
+                            }else if staff_options.trim() == "2" {
+                                let mut new_value: String = String::new();
+                                println!("Enter new BOS status(y/n): ");
+                                io::stdin().read_line(&mut new_value).expect("could not read line");
+    
+                                if new_value.trim().to_string() == "y" {
+                                    staff_members[index as usize].boss = true;
+                                }else{
+                                    staff_members[index as usize].boss = false;
+                                }
+                                
+                                save_to_file(&staff_members);
+    
+                            }else if staff_options.trim() == "3" {
+                                let mut new_value: String = String::new();
+                                println!("Enter new hour_cap with one decimal point(Ex: 15.0): ");
+                                io::stdin().read_line(&mut new_value).expect("could not read line");
+    
+                                staff_members[index as usize].hour_cap = new_value.to_string().trim().parse::<f32>().unwrap();
+                                save_to_file(&staff_members);
+                                
+                            }else if staff_options.trim() == "4" {
+                                let mut new_value: String = String::new();
+                                println!("Enter new significant other (case sensitive, must be an existing name in staff file. Enter NOBODY if it's nobody): ");
+                                io::stdin().read_line(&mut new_value).expect("could not read line");
+    
+                                staff_members[index as usize].significant_other = new_value.trim().to_string();
+                                if new_value.trim().to_string() == "NOBODY" {
+                                    staff_members[index as usize].relationship = false;
+                                }else {
+                                    staff_members[index as usize].relationship = true;
+                                }
+                                save_to_file(&staff_members);
+                            }else if staff_options.trim() == "5" {
+                                let mut day: String = String::new();
+                                println!("Enter numeric day of the week(IE: Monday = 1): ");
+                                io::stdin().read_line(&mut day).expect("could not read line");
 
-                        let mut staff_options: String = String::new();
+                                let mut shift: String = String::new();
+                                println!("Enter numeric shift num(IE: Morning = 1, Afternoon = 2) ");
+                                io::stdin().read_line(&mut shift).expect("could not read line");
 
-                        println!("Editing options:");
-                        println!("1. Change name");
+                                let mut new_value: String = String::new();
+                                println!("Enter new availability status(a=available, n=unavailable, m=available, but prefers not to work): ");
+                                io::stdin().read_line(&mut new_value).expect("could not read line");
+    
+                                staff_members[index as usize].availability[day.to_string().trim().parse::<usize>().unwrap()-1][shift.to_string().trim().parse::<usize>().unwrap()-1] = new_value.trim().to_string();
+                                save_to_file(&staff_members);
+                            }else if staff_options.trim() == "6" {
+                                break;
+                            }else {
+                                println!("Please choose one of the options");
+                                continue;
+                            }
+                        }
 
-                        io::stdin().read_line(&mut staff_options).expect("could not read line");
                     }
-
-
-
-
 
                 } else if staff_choice.trim() == "2"{
                     println!("Adding new staff member");
