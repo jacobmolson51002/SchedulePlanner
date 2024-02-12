@@ -105,28 +105,58 @@ fn get_staff(data: String, schedule: &Vec<Day>) -> Vec<Staff> {
     }
     return staff_vec
 }
-
-fn print_schedule(schedule: &Vec<Day>) {
-    println!("----------------------schedule------------------------");
+//schedule_str.push_str();
+fn print_schedule(schedule: &Vec<Day>, staff_members: &Vec<Staff>) -> String {
+    let mut schedule_str: String = String::new();
+    schedule_str.push_str("----------------------schedule------------------------\n");
     for i in 0..schedule.len() {
-        println!("------{}------", schedule[i].day);
+        schedule_str.push_str("------");
+        schedule_str.push_str(&schedule[i].day);
+        schedule_str.push_str("------\n");
+        //println!("------{}------", schedule[i].day);
         for j in 0..schedule[i].shifts.len() {
-            println!(" {}", schedule[i].shifts[j].shift);
+            schedule_str.push_str(" ");
+            schedule_str.push_str(&schedule[i].shifts[j].shift);
+            schedule_str.push_str("\n");
             for person in 0..schedule[i].shifts[j].people.len() {
                 if schedule[i].day == "saturday".to_string() || schedule[i].day == "sunday".to_string() || schedule[i].shifts[j].shift != "morning".to_string() {
                     if person == 0 {
-                        println!("    ID: {}", schedule[i].shifts[j].people[person]);
+                        schedule_str.push_str("    ID: ");
+                        schedule_str.push_str(&schedule[i].shifts[j].people[person]);
+                        schedule_str.push_str("\n");
                     }else if person == 1 {
-                        println!("    BOS: {}", schedule[i].shifts[j].people[person]);
+                        schedule_str.push_str("    BOS: ");
+                        schedule_str.push_str(&schedule[i].shifts[j].people[person]);
+                        schedule_str.push_str("\n");
                     }else{
-                        println!("    OA: {}", schedule[i].shifts[j].people[person]);
+                        schedule_str.push_str("    OA: ");
+                        schedule_str.push_str(&schedule[i].shifts[j].people[person]);
+                        schedule_str.push_str("\n");
                     }
                 }else {
-                    println!("    ID: {}", schedule[i].shifts[j].people[person]);
+                    schedule_str.push_str("    ID: ");
+                    schedule_str.push_str(&schedule[i].shifts[j].people[person]);
+                    schedule_str.push_str("\n");
                 }
             }
         }
     }
+
+    schedule_str.push_str("\n");
+    schedule_str.push_str("----------------------staff hours------------------------\n");
+    let mut average = 0.0;
+
+    for person in staff_members {
+        schedule_str.push_str(&person.name);
+        schedule_str.push_str(": ");
+        schedule_str.push_str(&person.hours.to_string());
+        schedule_str.push_str("\n");
+        average = average + person.hours;
+    }
+    schedule_str.push_str("\n");
+    schedule_str.push_str("Average staff hours: ");
+    schedule_str.push_str(&(average / staff_members.len() as f32 ).to_string());
+    schedule_str
 }
 
 fn not_working(day: &Vec<Shift>, name: &str) -> bool {
@@ -476,17 +506,8 @@ fn main() {
                 }
 
 
-                print_schedule(&schedule);
-                println!("");
-                println!("----------------------staff hours------------------------");
-                let mut average = 0.0;
-
-                for person in &staff_members {
-                    println!("{}: {}", person.name, person.hours);
-                    average = average + person.hours;
-                }
-                println!("");
-                println!("Average staff hours: {}", (average / staff_members.len() as f32 ));
+                let schedule_str = print_schedule(&schedule, &staff_members);
+                println!("{}", schedule_str);
 
                 let mut choice = String::new();
 
@@ -500,14 +521,19 @@ fn main() {
                     io::stdin().read_line(&mut choice).expect("can't read line");
     
                     if choice.trim() == "1"{
+                        choice = "".to_string();
                         continue 'generate;
                     }else if choice.trim() == "2" {
-                        println!("just saved to file");
+                        fs::write("./schedule.txt", schedule_str.clone()).expect("couldn't write to file");
+                        println!("File saved");
+                        choice = "".to_string();
                         continue;
                     }else if choice.trim() == "3" {
+                        choice = "".to_string();
                         break 'generate;
                     }else{
                         println!("Please choose one of the options.");
+                        choice = "".to_string();
                         continue;
                     }
                 }
@@ -531,7 +557,10 @@ fn main() {
     
                 io::stdin().read_line(&mut staff_choice).expect("unable to read line");
 
+                
+
                 if staff_choice.trim() == "3" {
+                    staff_choice = "".to_string();
                     break;
                 } else if staff_choice.trim() == "1" {
                     println!("working");
@@ -549,6 +578,7 @@ fn main() {
                     for staff in 0..staff_members.len() {
                         if staff_members[staff].name == staff_member.trim() {
                             index = staff as i8;
+                            staff_choice = "".to_string();
                             break;
                         }
                     }
@@ -557,6 +587,7 @@ fn main() {
                     if index == -1 {
                        println!("Could not find staff member."); 
                        //thread::sleep(Duration::from_millis(500));
+                       staff_choice = "".to_string();
                        continue;
                     }else {
                         loop {
@@ -582,6 +613,7 @@ fn main() {
     
                                 staff_members[index as usize].name = new_value.trim().to_string();
                                 save_to_file(&staff_members);
+                                staff_options = "".to_string();
                                 
                             }else if staff_options.trim() == "2" {
                                 let mut new_value: String = String::new();
@@ -595,6 +627,7 @@ fn main() {
                                 }
                                 
                                 save_to_file(&staff_members);
+                                staff_options = "".to_string();
     
                             }else if staff_options.trim() == "3" {
                                 let mut new_value: String = String::new();
@@ -603,6 +636,7 @@ fn main() {
     
                                 staff_members[index as usize].hour_cap = new_value.to_string().trim().parse::<f32>().unwrap();
                                 save_to_file(&staff_members);
+                                staff_options = "".to_string();
                                 
                             }else if staff_options.trim() == "4" {
                                 let mut new_value: String = String::new();
@@ -616,6 +650,7 @@ fn main() {
                                     staff_members[index as usize].relationship = true;
                                 }
                                 save_to_file(&staff_members);
+                                staff_options = "".to_string();
                             }else if staff_options.trim() == "5" {
                                 let mut day: String = String::new();
                                 println!("Enter numeric day of the week(IE: Monday = 1): ");
@@ -631,20 +666,26 @@ fn main() {
     
                                 staff_members[index as usize].availability[day.to_string().trim().parse::<usize>().unwrap()-1][shift.to_string().trim().parse::<usize>().unwrap()-1] = new_value.trim().to_string();
                                 save_to_file(&staff_members);
+                                staff_options = "".to_string();
                             }else if staff_options.trim() == "6" {
+                                staff_options = "".to_string();
                                 break;
                             }else {
                                 println!("Please choose one of the options");
+                                staff_options = "".to_string();
                                 continue;
                             }
                         }
 
                     }
+                    staff_choice = "".to_string();
 
                 } else if staff_choice.trim() == "2"{
                     println!("Adding new staff member");
+                    staff_choice = "".to_string();
                 } else {
                     println!("Please choose a valid option");
+                    staff_choice = "".to_string();
                 }
             }
             

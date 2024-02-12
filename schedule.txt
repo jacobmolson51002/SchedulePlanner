@@ -1,0 +1,108 @@
+----------------------schedule------------------------
+------monday------
+ morning
+    ID: Jackson
+ afternoon
+    ID: Haili
+    BOS: Matin
+    OA: Breeze
+ evening
+    ID: Peyton
+    BOS: Madhu
+    OA: Osman
+------tuesday------
+ morning
+    ID: Olson
+ afternoon
+    ID: Matt
+    BOS: Natasha
+    OA: Chloe
+    OA: Mo
+ evening
+    ID: Haili
+    BOS: Breeze
+    OA: Owen
+    OA: Tristan
+------wednesday------
+ morning
+    ID: Jackson
+ afternoon
+    ID: Peyton
+    BOS: Piper
+    OA: Chloe
+ evening
+    ID: Breeze
+    BOS: Clyde
+    OA: Joe
+    OA: Owen
+------thursday------
+ morning
+    ID: Miguel
+ afternoon
+    ID: Matt
+    BOS: Tristan
+    OA: Chloe
+ evening
+    ID: Olson
+    BOS: Osman
+    OA: Owen
+    OA: Clyde
+------friday------
+ morning
+    ID: Chloe
+ afternoon
+    ID: Haili
+    BOS: Jackson
+    OA: Matin
+    OA: Mo
+ evening
+    ID: Olson
+    BOS: Osman
+    OA: Owen
+    OA: Evan
+------saturday------
+ morning
+    ID: Haili
+    BOS: Clyde
+    OA: Osman
+    OA: Miguel
+ evening
+    ID: Peyton
+    BOS: Joe
+    OA: Evan
+    OA: Daniel
+------sunday------
+ morning
+    ID: Tristan
+    BOS: Miguel
+    OA: Olson
+    OA: Mo
+ evening
+    ID: Matt
+    BOS: Evan
+    OA: Daniel
+    OA: Matin
+
+----------------------staff hours------------------------
+Olson: 18.5
+Osman: 20
+Mo: 14.5
+Evan: 17.5
+Miguel: 16
+Peyton: 15.5
+Natasha: 4.5
+Tristan: 14.5
+Matt: 15.5
+Daniel: 13
+Matin: 15.5
+Piper: 4.5
+Breeze: 13.5
+Clyde: 15.5
+Jackson: 12.5
+Madhu: 4.5
+Joe: 11
+Chloe: 17.5
+Haili: 20
+Owen: 18
+
+Average staff hours: 14.1
