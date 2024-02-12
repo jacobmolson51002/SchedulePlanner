@@ -242,6 +242,66 @@ fn save_to_file(staff_members: &Vec<Staff>) {
     fs::write("./staff.txt", new_file).expect("couldn't write to file");
 }
 
+fn new_staff_member(schedule: &Vec<Day>) -> Staff {
+    let mut name: String = String::new();
+    println!("What is their name?: ");
+    io::stdin().read_line(&mut name).expect("couldn't read line");
+
+    let mut bos: String = String::new();
+    println!("Are they a BOS?(y/n): ");
+    io::stdin().read_line(&mut bos).expect("couldn't read line");
+
+    let mut relationship: String = String::new();
+    println!("Are they in a relationship with another staff member(y/n)?: ");
+    io::stdin().read_line(&mut relationship).expect("couldn't read line");
+
+    let mut significant_other: String = String::from("NOBODY");
+    if relationship.trim() == "y" {
+        println!("What is their name?: ");
+        io::stdin().read_line(&mut significant_other).expect("couldn't read line");
+    }
+
+    let mut hour_cap: String = String::new();
+    println!("Do they have an hour cap?(y/n): ");
+    io::stdin().read_line(&mut hour_cap).expect("couldn't read line");
+
+    let mut cap: String = String::from("20.0");
+    if hour_cap.trim() == "y" {
+        println!("What is their hour cap?(Include one decimal place. IE: 10.0): ");
+        io::stdin().read_line(&mut cap).expect("couldn't read line");
+    }
+
+    let mut staff_member = Staff {
+        name: name.trim().to_string(),
+        hours: 0.0,
+        boss: if bos.trim() == "n" { false } else { true },
+        relationship: if relationship.trim() == "n" { false } else { true },
+        significant_other: significant_other.trim().to_string(),
+        hour_cap: if hour_cap.trim() == "n" { 20.0 } else { cap.trim().parse::<f32>().unwrap() },
+        availability: Vec::<Vec<String>>::new()
+    };
+
+    let mut availability: Vec<Vec<String>> = Vec::<Vec<String>>::new();
+    for i in 0..7 {
+        availability.push(vec![]);
+    }
+
+    for day in 0..schedule.len() {
+        for shift in 0..schedule[day].shifts.len() {
+            let mut user_input: String = String::new();
+            print!("\x1B[2J");
+            //print_staff(&vec![staff_member.clone()]);
+            println!("What is their {} {} availability?(a = available, n = not available, m = available but prefers not to work)", schedule[day].day, schedule[day].shifts[shift].shift);
+            io::stdin().read_line(&mut user_input).expect("could not read line");
+            availability[day].push(user_input.trim().to_string());
+            staff_member.availability = availability.clone();
+        }
+    }
+
+    staff_member
+
+}
+
 fn main() {
     let mut schedule_template = vec![
         Day {
@@ -602,7 +662,8 @@ fn main() {
                             println!("3. Change hour cap");
                             println!("4. Change significant other");
                             println!("5. Change availability");
-                            println!("6. back");
+                            println!("6. Remove staff member");
+                            println!("7. back");
     
                             io::stdin().read_line(&mut staff_options).expect("could not read line");
     
@@ -668,8 +729,11 @@ fn main() {
                                 save_to_file(&staff_members);
                                 staff_options = "".to_string();
                             }else if staff_options.trim() == "6" {
-                                staff_options = "".to_string();
+                                staff_members.remove(index as usize);
+                                save_to_file(&staff_members);
                                 break;
+                            }else if staff_options.trim() == "7" {
+                                break
                             }else {
                                 println!("Please choose one of the options");
                                 staff_options = "".to_string();
@@ -681,7 +745,17 @@ fn main() {
                     staff_choice = "".to_string();
 
                 } else if staff_choice.trim() == "2"{
-                    println!("Adding new staff member");
+                    println!("\x1B[2J");
+                    let new_member = new_staff_member(&schedule_template);
+                    println!("\x1B[2J");
+                    print_staff(&vec![new_member.clone()]);
+                    let mut user_input: String = String::new();
+                    println!("Save new staff member?(y/n): ");
+                    io::stdin().read_line(&mut user_input).expect("couldn't read line");
+                    if user_input.trim() == "y" {
+                        staff_members.push(new_member);
+                        save_to_file(&staff_members);
+                    }
                     staff_choice = "".to_string();
                 } else {
                     println!("Please choose a valid option");

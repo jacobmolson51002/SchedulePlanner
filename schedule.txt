@@ -12,97 +12,98 @@
     OA: Osman
 ------tuesday------
  morning
-    ID: Olson
+    ID: Osman
  afternoon
-    ID: Matt
-    BOS: Natasha
-    OA: Chloe
-    OA: Mo
- evening
-    ID: Haili
-    BOS: Breeze
-    OA: Owen
+    ID: Chloe
+    BOS: Mo
+    OA: Matt
     OA: Tristan
+ evening
+    ID: Olson
+    BOS: Daniel
+    OA: Breeze
+    OA: Owen
 ------wednesday------
  morning
-    ID: Jackson
- afternoon
     ID: Peyton
-    BOS: Piper
-    OA: Chloe
+ afternoon
+    ID: Matt
+    BOS: Chloe
+    OA: Haili
+    OA: Piper
  evening
     ID: Breeze
-    BOS: Clyde
-    OA: Joe
+    BOS: Miguel
+    OA: Osman
     OA: Owen
 ------thursday------
  morning
     ID: Miguel
  afternoon
-    ID: Matt
-    BOS: Tristan
-    OA: Chloe
+    ID: Chloe
+    BOS: Natasha
+    OA: Tristan
  evening
-    ID: Olson
-    BOS: Osman
-    OA: Owen
+    ID: Matt
+    BOS: Owen
+    OA: Matin
     OA: Clyde
 ------friday------
  morning
-    ID: Chloe
+    ID: Clyde
  afternoon
-    ID: Haili
-    BOS: Jackson
-    OA: Matin
-    OA: Mo
- evening
-    ID: Olson
-    BOS: Osman
-    OA: Owen
-    OA: Evan
-------saturday------
- morning
-    ID: Haili
-    BOS: Clyde
-    OA: Osman
-    OA: Miguel
- evening
     ID: Peyton
-    BOS: Joe
-    OA: Evan
+    BOS: Piper
     OA: Daniel
-------sunday------
- morning
-    ID: Tristan
-    BOS: Miguel
-    OA: Olson
     OA: Mo
  evening
     ID: Matt
+    BOS: Tristan
+    OA: Jackson
+    OA: Evan
+------saturday------
+ morning
+    ID: Olson
+    BOS: Osman
+    OA: Piper
+    OA: Haili
+ evening
+    ID: Chloe
+    BOS: Matin
+    OA: Joe
+    OA: Evan
+------sunday------
+ morning
+    ID: Breeze
+    BOS: Joe
+    OA: Clyde
+    OA: Jackson
+ evening
+    ID: Peyton
     BOS: Evan
     OA: Daniel
-    OA: Matin
+    OA: Olson
 
 ----------------------staff hours------------------------
-Olson: 18.5
-Osman: 20
-Mo: 14.5
-Evan: 17.5
-Miguel: 16
-Peyton: 15.5
+Haili: 15.5
 Natasha: 4.5
-Tristan: 14.5
-Matt: 15.5
-Daniel: 13
+Jackson: 14
+Evan: 17.5
 Matin: 15.5
-Piper: 4.5
-Breeze: 13.5
-Clyde: 15.5
-Jackson: 12.5
+Osman: 19.5
+Olson: 17.5
+Tristan: 13.5
+Mo: 9
+Owen: 13.5
+Chloe: 20
 Madhu: 4.5
-Joe: 11
-Chloe: 17.5
-Haili: 20
-Owen: 18
+Matt: 18
+Piper: 15.5
+Miguel: 8.5
+Breeze: 19
+Clyde: 14
+Peyton: 19.5
+Joe: 12
+Daniel: 15.5
 
-Average staff hours: 14.1
+Average staff hours: 14.325
